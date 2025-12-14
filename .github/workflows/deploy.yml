@@ -7,14 +7,13 @@ on:
 
 jobs:
   deploy:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,12 +24,11 @@ jobs:
         with:
           version: 9
 
-      # 4. Install dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Worker CLI
-        run : pnpm add wrangler
+        run : pnpm add -g wrangler@3
 
       - name: Deploy to Cloudflare
         env:
@@ -38,4 +36,4 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
-        run: pnpm run deploy
+        run: wrangler deploy
