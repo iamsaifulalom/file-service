@@ -13,6 +13,7 @@ export interface BODY {
 export default {
   async fetch(req: Request, env: any) {
 
+verifyAuth(req, env);                // throws Response if unauthorized
     try {
       if (req.method !== "POST") {
         return new Response("Only POST method allowed", { status: 405 });
@@ -20,7 +21,6 @@ export default {
 
       const body: BODY = await req.json();
 
-      verifyAuth(req, env);                // throws Response if unauthorized
       verifyDomainAndResources(req, body); // throws Response if origin/filetype invalid
 
       const key = `${body.project}/uploads/${Date.now()}-${body.fileName}`;
